@@ -1,16 +1,40 @@
-import React, { Component, useState } from 'react';
+import React, { useState } from 'react';
+import { Switch, Route } from 'react-router-dom';
 import AppBar from './AppBar';
 import Container from './Container';
+import HomePage from '../views/HomePage';
+import MoviesPage from '../views/MoviesPage';
+import SearchBar from './SearchBar';
+import SearchForm from './SearchForm';
+import MovieDetailsPage from '../views/MovieDetailsPage/';
 
-function App() {
+export default function App() {
+  const [searchQuery, setSearchQuery] = useState('');
+  const handleFormSubmit = searchQuery => {
+    setSearchQuery(searchQuery);
+  };
   return (
     <div>
-      <h1>FInally</h1>
-      {/* <Container>
+      <Container>
         <AppBar />
-      </Container> */}
+        <Switch>
+          <Route path="/" exact>
+            <HomePage />
+          </Route>
+          <Route path="/movies">
+            <SearchBar>
+              <SearchForm onSubmit={handleFormSubmit} />
+            </SearchBar>
+            <MoviesPage searchQuery={searchQuery} />
+          </Route>
+          <Route path="/movies/:movieId">
+            <MovieDetailsPage />
+          </Route>
+        </Switch>
+      </Container>
     </div>
   );
 }
 
-export default App;
+// '/movies' - компонент <MoviesPage>, страница поиска фильмов по ключевому слову.
+// '/movies/:movieId' - компонент <MovieDetailsPage>, страница с детальной информацией о кинофильме.
