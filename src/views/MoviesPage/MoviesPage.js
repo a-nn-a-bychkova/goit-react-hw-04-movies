@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams, useRouteMatch } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import * as moviesAPI from '../../services/movies-api';
 
 const Status = {
@@ -10,106 +11,66 @@ const Status = {
 };
 
 export default function MoviesPage(props) {
-  const { filmId } = useParams();
+  const { url } = useRouteMatch();
+
+  const searchQuery = props.searchQuery;
   const [films, setFilms] = useState();
   const [error, setError] = useState(null);
   const [status, setStatus] = useState(Status.IDLE);
-  const [searchQuery, setSearchQuery] = useState(props.searchQuery);
+  // const [searchQuery, setSearchQuery] = useState(currentSearchQuery);
 
   useEffect(() => {
+    console.log('we are on MoviesPage this is currSearchQuery', searchQuery);
+    console.log('we are on Movie PAge this is searchQuery', searchQuery);
+    if (searchQuery === '') {
+      return;
+    } else {
+      fetchFilms(searchQuery);
+    }
+  }, [searchQuery]);
+
+  const fetchFilms = searchQuery => {
     moviesAPI
       .fetchFilmsByQuery(searchQuery)
-      .then(response => console.log(response));
-  }, [searchQuery]);
-  return <h2>Here will be list of films</h2>;
+      .then(response => {
+        // console.log(response);
+        if (response.results.length === 0) {
+          return (
+            setError(`по запросу ${searchQuery} ничего не найдено`),
+            setStatus(Status.REJECTED)
+          );
+        }
+
+        return setFilms(response.results), setStatus(Status.RESOLVED);
+      })
+      .catch(error => {
+        return setError(error), setStatus(Status.REJECTED);
+      });
+  };
+
+  if (status === 'idle') {
+    return <></>;
+  }
+
+  if (status === 'resolved') {
+    return (
+      <div>
+        <ul>
+          {films.map(film => (
+            <li key={film.id}>
+              <Link to={`${url}/${film.id}`}>
+                {film.original_title}
+                {film.name}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
+  }
+  if (status === 'rejected') {
+    return <h1>{error}</h1>;
+  }
 }
 
-// export default function ImageGallery(props) {
-//   const [images, setImages] = useState([]);
-//   const [error, setError] = useState(null);
-//   const [status, setStatus] = useState(Status.IDLE);
-//   const [page, setPage] = useState(1);
-//   const searchQuery = props.searchQuery;
-
-//   useEffect(() => {
-//     if (searchQuery === '') {
-//       return;
-//     }
-//
-//   }, [searchQuery]);
-
-//   useEffect(() => {
-//     if (page === 1) {
-//       return;
-//     }
-//     fetchImages(searchQuery, page);
-//   }, [page]);
-
-//   const fetchImages = (currentSearchQuery, page) => {
-//     setStatus(Status.PENDING);
-//     imageAPI
-//       .fetchImage(currentSearchQuery, page)
-//       .then(newImages => {
-//         if (newImages.hits.length === 0 && page === 1) {
-//           return (
-//             setError(`по запросу ${currentSearchQuery} ничего не найдено`),
-//             setStatus(Status.REJECTED)
-//           );
-//         } else if (newImages.hits.length === 0 && page > 1) {
-//           return setStatus(Status.RESOLVED);
-//         }
-//         return (
-//           setImages(images => [...images, ...newImages.hits]),
-//           setStatus(Status.RESOLVED),
-//           window.scrollTo({
-//             top: document.documentElement.scrollHeight,
-//             behavior: 'smooth',
-//           })
-//         );
-//       })
-//       .catch(error => {
-//         return setError(error), setStatus(Status.REJECTED);
-//       });
-//   };
-
-//   const changePageNumber = page => {
-//     setPage(page => page + 1);
-//   };
-
-//   const handleImgClick = event => {
-//     if (event.target.tagName === 'IMG') {
-//       props.onClick(event.target.dataset.url, event.target.alt);
-//     }
-//   };
-
-//   if (status === 'idle') {
-//     return <></>;
-//   }
-//   if (status === 'pending' || status === 'resolved') {
-//     return (
-//       <div>
-//         <ul className={s.ImageGallery} onClick={handleImgClick}>
-//           {images.map((image, index) => (
-//             <ImageGalleryItem
-//               key={`${image.id}${index}`}
-//               smallPicture={image.webformatURL}
-//               largePicture={image.largeImageURL}
-//               alt={image.tags}
-//             />
-//           ))}
-//         </ul>
-//         {status === 'resolved' && <Button onClick={changePageNumber} />}
-//         {status === 'pending' && <Loader />}
-//       </div>
-//     );
-//   }
-
-//   if (status === 'rejected') {
-//     return <h1>{error}</h1>;
-//   }
-// }
-
-// ImageGallery.propTypes = {
-//   searchQuery: PropTypes.string.isRequired,
-//   onClick: PropTypes.func.isRequired,
-// };
+MoviesPage.propTypes = { searchQuery: PropTypes.string.isRequired };

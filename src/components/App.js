@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Switch, Route } from 'react-router-dom';
 import AppBar from './AppBar';
 import Container from './Container';
@@ -13,6 +13,7 @@ export default function App() {
   const handleFormSubmit = searchQuery => {
     setSearchQuery(searchQuery);
   };
+
   return (
     <div>
       <Container>
@@ -21,7 +22,7 @@ export default function App() {
           <Route path="/" exact>
             <HomePage />
           </Route>
-          <Route path="/movies">
+          <Route path="/movies" exact>
             <SearchBar>
               <SearchForm onSubmit={handleFormSubmit} />
             </SearchBar>

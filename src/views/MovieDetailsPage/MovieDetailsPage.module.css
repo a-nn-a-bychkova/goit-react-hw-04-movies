@@ -1,0 +1,29 @@
+.Container {
+  display: flex;
+}
+
+.Card {
+  margin-left: 30px;
+}
+
+.List {
+  display: flex;
+  list-style: none;
+  padding: 0;
+}
+.Item {
+  display: inline-block;
+  margin-right: 10px;
+}
+.link {
+  display: inline-block;
+  text-decoration: none;
+  font-weight: 500;
+  color: #2a363b;
+  font-size: 14px;
+}
+
+.activeLink {
+  composes: link;
+  color: #2196f3;
+}
