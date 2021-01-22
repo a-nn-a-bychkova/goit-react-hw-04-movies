@@ -1,9 +1,19 @@
+.MainContainer {
+  display: flex;
+  flex-direction: column;
+}
+.Button {
+  float: left;
+  width: 70px;
+  margin-bottom: 20px;
+}
 .Container {
   display: flex;
 }
 
 .Card {
   margin-left: 30px;
+  text-align: left;
 }
 
 .List {
@@ -11,10 +21,12 @@
   list-style: none;
   padding: 0;
 }
+
 .Item {
   display: inline-block;
   margin-right: 10px;
 }
+
 .link {
   display: inline-block;
   text-decoration: none;
@@ -26,4 +38,9 @@
 .activeLink {
   composes: link;
   color: #2196f3;
+}
+
+.NavList {
+  list-style: none;
+  text-align: left;
 }

@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Link, Route, useRouteMatch, useLocation } from 'react-router-dom';
-import PageHeading from '../../components/PageHeading';
 import * as moviesAPI from '../../services/movies-api';
-import MovieDetailsPage from '../MovieDetailsPage';
+import PageHeading from '../../components/PageHeading';
+import styles from './HomePage.module.css';
 
 export default function HomePage() {
   const { url, path } = useRouteMatch();
@@ -14,12 +14,12 @@ export default function HomePage() {
   }, []);
 
   return (
-    <>
+    <div className={styles.Container}>
       <PageHeading text="Trending today" />
       {films && (
-        <ul>
+        <ul className={styles.List}>
           {films.map(film => (
-            <li key={film.id}>
+            <li key={film.id} className={styles.Item}>
               <Link
                 to={{
                   pathname: `${url}movies/${film.id}`,
@@ -33,6 +33,6 @@ export default function HomePage() {
           ))}
         </ul>
       )}
-    </>
+    </div>
   );
 }

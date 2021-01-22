@@ -7,7 +7,7 @@ async function fetchWithErrorHandling(url = '', config = {}) {
 
 export function fetchPupularFilms() {
   return fetchWithErrorHandling(
-    'https://api.themoviedb.org/3/trending/all/day?api_key=483f016a075be90c7c51aafb3937819c',
+    'https://api.themoviedb.org/3/trending/movie/day?api_key=483f016a075be90c7c51aafb3937819c',
   );
 }
 

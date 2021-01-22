@@ -1,12 +1,26 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { Switch, Route } from 'react-router-dom';
 import AppBar from './AppBar';
 import Container from './Container';
-import HomePage from '../views/HomePage';
-import MoviesPage from '../views/MoviesPage';
-import SearchBar from './SearchBar';
-import SearchForm from './SearchForm';
-import MovieDetailsPage from '../views/MovieDetailsPage/';
+import Loader from '.././components/Loader';
+
+const HomePage = lazy(() =>
+  import('../views/HomePage' /*webpackChunkName:"home-page"*/),
+);
+const MoviesPage = lazy(() =>
+  import('../views/MoviesPage' /*webpackChunkName:"movie-page"*/),
+);
+const SearchBar = lazy(() =>
+  import('./SearchBar' /*webpackChunkName:"search-bar"*/),
+);
+const SearchForm = lazy(() =>
+  import('./SearchForm' /*webpackChunkName:"search-form"*/),
+);
+const MovieDetailsPage = lazy(() =>
+  import(
+    '../views/MovieDetailsPage/' /*webpackChunkName:"movie-details-page"*/
+  ),
+);
 
 export default function App() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -18,20 +32,22 @@ export default function App() {
     <div>
       <Container>
         <AppBar />
-        <Switch>
-          <Route path="/" exact>
-            <HomePage />
-          </Route>
-          <Route path="/movies" exact>
-            <SearchBar>
-              <SearchForm onSubmit={handleFormSubmit} />
-            </SearchBar>
-            <MoviesPage searchQuery={searchQuery} />
-          </Route>
-          <Route path="/movies/:movieId">
-            <MovieDetailsPage />
-          </Route>
-        </Switch>
+        <Suspense fallback={<Loader />}>
+          <Switch>
+            <Route path="/" exact>
+              <HomePage />
+            </Route>
+            <Route path="/movies" exact>
+              <SearchBar>
+                <SearchForm onSubmit={handleFormSubmit} />
+              </SearchBar>
+              <MoviesPage searchQuery={searchQuery} />
+            </Route>
+            <Route path="/movies/:movieId">
+              <MovieDetailsPage />
+            </Route>
+          </Switch>
+        </Suspense>
       </Container>
     </div>
   );

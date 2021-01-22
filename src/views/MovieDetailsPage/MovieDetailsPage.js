@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, lazy, Suspense } from 'react';
 import {
   NavLink,
   Route,
@@ -7,11 +7,12 @@ import {
   useHistory,
   useLocation,
 } from 'react-router-dom';
-import PageHeading from '../../components/PageHeading';
 import * as moviesAPI from '../../services/movies-api';
-import Cast from '../Cast';
-import Reviews from '../Reviews';
 import styles from './MovieDetailsPage.module.css';
+import Loader from '../../components/Loader';
+
+const Cast = lazy(() => import('../Cast' /*webpackChunkName:"cast"*/));
+const Reviews = lazy(() => import('../Reviews' /*webpackChunkName:"reviews"*/));
 
 const Status = {
   IDLE: 'idle',
@@ -20,7 +21,7 @@ const Status = {
   REJECTED: 'rejected',
 };
 
-export default function MovieDetailsPage(props) {
+export default function MovieDetailsPage() {
   const { url, path } = useRouteMatch();
   const { movieId } = useParams();
   const [error, setError] = useState(null);
@@ -54,11 +55,12 @@ export default function MovieDetailsPage(props) {
 
   return (
     <>
-      {movie && (
-        <>
+      {status === 'resolved' && (
+        <div className={styles.MainContainer}>
           <button
             type="button"
             onClick={() => history.push(location.state.from)}
+            className={styles.Button}
           >
             Go back
           </button>
@@ -81,11 +83,11 @@ export default function MovieDetailsPage(props) {
               </ul>
             </div>
           </div>
-        </>
+        </div>
       )}
       <hr />
       {movie && (
-        <ul>
+        <ul className={styles.NavList}>
           <li>
             <NavLink
               to={`/movies/${movieId}/cast`}
@@ -107,12 +109,15 @@ export default function MovieDetailsPage(props) {
         </ul>
       )}
       <hr />
-      <Route path={`${path}/cast`}>
-        <Cast />
-      </Route>
-      <Route path={`${path}/reviews`}>
-        <Reviews />
-      </Route>
+      <Suspense fallback={<Loader />}>
+        <Route path={`${path}/cast`}>
+          <Cast />
+        </Route>
+        <Route path={`${path}/reviews`}>
+          <Reviews />
+        </Route>
+      </Suspense>
+      {status === 'rejected' && <h2>{error}</h2>}
     </>
   );
 }

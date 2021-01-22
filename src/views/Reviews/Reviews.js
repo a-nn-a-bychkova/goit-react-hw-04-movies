@@ -14,7 +14,7 @@ export default function Reviews() {
 
   return (
     <>
-      {(reviews && reviews.length) === 0 && (
+      {reviews && reviews.length === 0 && (
         <p>We don't have any reviews for this movie</p>
       )}
       {reviews && (

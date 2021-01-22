@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation, useParams, useRouteMatch } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import styles from './MoviePage.module.css';
 import * as moviesAPI from '../../services/movies-api';
 
 const Status = {
@@ -50,7 +51,7 @@ export default function MoviesPage(props) {
   if (status === 'resolved') {
     return (
       <div>
-        <ul>
+        <ul className={styles.List}>
           {films.map(film => (
             <li key={film.id}>
               <Link
