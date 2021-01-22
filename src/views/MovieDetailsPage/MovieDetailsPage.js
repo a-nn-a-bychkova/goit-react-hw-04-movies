@@ -13,19 +13,44 @@ import Cast from '../Cast';
 import Reviews from '../Reviews';
 import styles from './MovieDetailsPage.module.css';
 
+const Status = {
+  IDLE: 'idle',
+  PENDING: 'pending',
+  RESOLVED: 'resolved',
+  REJECTED: 'rejected',
+};
+
 export default function MovieDetailsPage(props) {
   const { url, path } = useRouteMatch();
   const { movieId } = useParams();
+  const [error, setError] = useState(null);
+  const [status, setStatus] = useState(Status.IDLE);
   const [movie, setMovie] = useState(null);
   const history = useHistory();
   const location = useLocation();
-  useEffect(() => {
-    moviesAPI.fetchMovieById(movieId).then(setMovie);
-  }, [movieId]);
 
   useEffect(() => {
-    console.log(location.state.from);
-  }, []);
+    if (!movieId) {
+      return;
+    }
+    setMovie(null);
+    setError(null);
+    setStatus(Status.IDLE);
+    fetchMovie(movieId);
+  }, [movieId]);
+
+  const fetchMovie = movieId => {
+    moviesAPI
+      .fetchMovieById(movieId)
+      .then(response => {
+        console.log(response);
+
+        return setMovie(response), setStatus(Status.RESOLVED);
+      })
+      .catch(error => {
+        return setError(error), setStatus(Status.REJECTED);
+      });
+  };
 
   return (
     <>

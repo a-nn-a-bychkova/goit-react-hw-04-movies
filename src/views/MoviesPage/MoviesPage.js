@@ -14,33 +14,28 @@ export default function MoviesPage(props) {
   const { url } = useRouteMatch();
 
   const searchQuery = props.searchQuery;
-  const [films, setFilms] = useState();
+  const [films, setFilms] = useState([]);
   const [error, setError] = useState(null);
   const [status, setStatus] = useState(Status.IDLE);
   const location = useLocation();
 
   useEffect(() => {
-    console.log('we are on MoviesPage this is currSearchQuery', searchQuery);
-    console.log('we are on Movie PAge this is searchQuery', searchQuery);
     if (searchQuery === '') {
       return;
-    } else {
-      fetchFilms(searchQuery);
     }
+    setFilms([]);
+    setError(null);
+    setStatus(Status.IDLE);
+    fetchFilms(searchQuery);
   }, [searchQuery]);
 
   const fetchFilms = searchQuery => {
     moviesAPI
       .fetchFilmsByQuery(searchQuery)
       .then(response => {
-        // console.log(response);
+        console.log(response);
         if (response.results.length === 0) {
-          return (
-            setError(`по запросу ${searchQuery} ничего не найдено`),
-            setStatus(Status.REJECTED)
-          );
         }
-
         return setFilms(response.results), setStatus(Status.RESOLVED);
       })
       .catch(error => {
@@ -74,7 +69,7 @@ export default function MoviesPage(props) {
     );
   }
   if (status === 'rejected') {
-    return <h1>{error}</h1>;
+    return <h2>{error}</h2>;
   }
 }
 
