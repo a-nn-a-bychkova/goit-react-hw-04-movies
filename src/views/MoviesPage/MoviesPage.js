@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, useParams, useRouteMatch } from 'react-router-dom';
+import { Link, useLocation, useParams, useRouteMatch } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import * as moviesAPI from '../../services/movies-api';
 
@@ -17,7 +17,7 @@ export default function MoviesPage(props) {
   const [films, setFilms] = useState();
   const [error, setError] = useState(null);
   const [status, setStatus] = useState(Status.IDLE);
-  // const [searchQuery, setSearchQuery] = useState(currentSearchQuery);
+  const location = useLocation();
 
   useEffect(() => {
     console.log('we are on MoviesPage this is currSearchQuery', searchQuery);
@@ -58,7 +58,12 @@ export default function MoviesPage(props) {
         <ul>
           {films.map(film => (
             <li key={film.id}>
-              <Link to={`${url}/${film.id}`}>
+              <Link
+                to={{
+                  pathname: `${url}/${film.id}`,
+                  state: { from: location },
+                }}
+              >
                 {film.original_title}
                 {film.name}
               </Link>
