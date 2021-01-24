@@ -22,7 +22,7 @@ const Status = {
 };
 
 export default function MovieDetailsPage() {
-  const { url, path } = useRouteMatch();
+  const { path } = useRouteMatch();
   const { movieId } = useParams();
   const [error, setError] = useState(null);
   const [status, setStatus] = useState(Status.IDLE);
@@ -44,24 +44,23 @@ export default function MovieDetailsPage() {
     moviesAPI
       .fetchMovieById(movieId)
       .then(response => {
-        console.log(response);
-
-        return setMovie(response), setStatus(Status.RESOLVED);
+        setMovie(response);
+        setStatus(Status.RESOLVED);
       })
       .catch(error => {
-        return setError(error), setStatus(Status.REJECTED);
+        setError(error);
+        setStatus(Status.REJECTED);
       });
+  };
+  const goBack = () => {
+    history.push(location?.state?.from ?? '/');
   };
 
   return (
     <>
       {status === 'resolved' && (
         <div className={styles.MainContainer}>
-          <button
-            type="button"
-            onClick={() => history.push(location.state.from)}
-            className={styles.Button}
-          >
+          <button type="button" onClick={goBack} className={styles.Button}>
             Go back
           </button>
           <div className={styles.Container}>

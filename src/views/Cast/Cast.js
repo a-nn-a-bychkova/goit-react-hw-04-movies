@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import * as moviesAPI from '../../services/movies-api';
+import styles from './Cast.module.css';
 
 export default function Cast() {
   const { movieId } = useParams();
@@ -13,7 +14,7 @@ export default function Cast() {
   return (
     <>
       {cast && (
-        <ul>
+        <ul className={styles.List}>
           {cast.map(actor => (
             <li key={actor.id}>{actor.name}</li>
           ))}

@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
-import { Link, Route, useRouteMatch, useLocation } from 'react-router-dom';
+import { Link, useRouteMatch, useLocation } from 'react-router-dom';
 import * as moviesAPI from '../../services/movies-api';
 import PageHeading from '../../components/PageHeading';
 import styles from './HomePage.module.css';
 
 export default function HomePage() {
-  const { url, path } = useRouteMatch();
+  const { url } = useRouteMatch();
   const location = useLocation();
   const [films, setFilms] = useState('');
   useEffect(() => {
