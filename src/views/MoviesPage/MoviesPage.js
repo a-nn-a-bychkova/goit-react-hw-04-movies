@@ -37,10 +37,12 @@ export default function MoviesPage(props) {
         console.log(response);
         if (response.results.length === 0) {
         }
-        return setFilms(response.results), setStatus(Status.RESOLVED);
+        setFilms(response.results);
+        setStatus(Status.RESOLVED);
       })
       .catch(error => {
-        return setError(error), setStatus(Status.REJECTED);
+        setError(error);
+        setStatus(Status.REJECTED);
       });
   };
 

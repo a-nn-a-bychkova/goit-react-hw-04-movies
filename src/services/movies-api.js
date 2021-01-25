@@ -10,7 +10,7 @@ async function fetchWithErrorHandling(url = '', config = {}) {
 
 export function fetchPupularFilms() {
   return fetchWithErrorHandling(
-    '${BASE_URL}trending/movie/day?api_key=${API_KEY}',
+    `${BASE_URL}trending/movie/day?api_key=${API_KEY}`,
   );
 }
 

@@ -10,6 +10,7 @@ import {
 import * as moviesAPI from '../../services/movies-api';
 import styles from './MovieDetailsPage.module.css';
 import Loader from '../../components/Loader';
+import image from '../../images/film-reels-and-filmstrip-clapper-board.jpg';
 
 const Cast = lazy(() => import('../Cast' /*webpackChunkName:"cast"*/));
 const Reviews = lazy(() => import('../Reviews' /*webpackChunkName:"reviews"*/));
@@ -52,6 +53,7 @@ export default function MovieDetailsPage() {
         setStatus(Status.REJECTED);
       });
   };
+
   const goBack = () => {
     history.push(location?.state?.from ?? '/');
   };
@@ -64,7 +66,14 @@ export default function MovieDetailsPage() {
             Go back
           </button>
           <div className={styles.Container}>
-            <img src={`https://image.tmdb.org/t/p/w200/${movie.poster_path}`} />
+            {movie.poster_path ? (
+              <img
+                src={`https://image.tmdb.org/t/p/w200/${movie.poster_path}`}
+              />
+            ) : (
+              <img src={image} />
+            )}
+
             <div className={styles.Card}>
               <h2>
                 {movie.title}({movie.release_date.slice(0, -6)})
@@ -89,7 +98,10 @@ export default function MovieDetailsPage() {
         <ul className={styles.NavList}>
           <li>
             <NavLink
-              to={`/movies/${movieId}/cast`}
+              to={{
+                pathname: `/movies/${movieId}/cast`,
+                state: { from: location },
+              }}
               className={styles.link}
               activeClassName={styles.activeLink}
             >
@@ -98,7 +110,10 @@ export default function MovieDetailsPage() {
           </li>
           <li>
             <NavLink
-              to={`/movies/${movieId}/reviews`}
+              to={{
+                pathname: `/movies/${movieId}/reviews`,
+                state: { from: location },
+              }}
               className={styles.link}
               activeClassName={styles.activeLink}
             >
