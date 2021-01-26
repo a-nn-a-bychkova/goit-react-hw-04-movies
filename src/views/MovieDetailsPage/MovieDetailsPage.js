@@ -66,14 +66,13 @@ export default function MovieDetailsPage() {
             Go back
           </button>
           <div className={styles.Container}>
-            {movie.poster_path ? (
-              <img
-                src={`https://image.tmdb.org/t/p/w200/${movie.poster_path}`}
-              />
-            ) : (
-              <img src={image} />
-            )}
-
+            <img
+              src={
+                movie.poster_path
+                  ? `https://image.tmdb.org/t/p/w200/${movie.poster_path}`
+                  : image
+              }
+            />
             <div className={styles.Card}>
               <h2>
                 {movie.title}({movie.release_date.slice(0, -6)})

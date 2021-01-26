@@ -13,7 +13,6 @@ const Status = {
 
 export default function MoviesPage(props) {
   const { url } = useRouteMatch();
-
   const searchQuery = props.searchQuery;
   const [films, setFilms] = useState([]);
   const [error, setError] = useState(null);
@@ -34,7 +33,6 @@ export default function MoviesPage(props) {
     moviesAPI
       .fetchFilmsByQuery(searchQuery)
       .then(response => {
-        console.log(response);
         if (response.results.length === 0) {
         }
         setFilms(response.results);

@@ -10,7 +10,6 @@ export default function HomePage() {
   const [films, setFilms] = useState('');
   useEffect(() => {
     moviesAPI.fetchPupularFilms().then(response => setFilms(response.results));
-    console.log('films HP', films);
   }, []);
 
   return (
